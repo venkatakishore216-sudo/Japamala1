@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chant Player</title>
+
+<script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
+
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+    
+  }
+  .chanting{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    background:#FFF7E6;
+    height:94vh;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .box{
+    width:100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 12px;
+    background:#fff;
+    display: grid;
+    place-items: center;
+    text-align:center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  }
+
+  input[type="file"]{
+    display:none;
+  }
+
+  .upload-box{
+    height:200px;
+    width:200px;
+    border-radius:8px;
+    border:2px dashed #1a73e8;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    font-weight:bold;
+    margin-bottom:15px;
+    color:#1a73e8;
+    padding:10px;
+  }
+
+  .upload-box i{
+    font-size:30px;
+    margin-bottom:8px;
+  }
+
+  #count{
+    width:80px;
+    padding:8px;
+    font-size:16px;
+    text-align:center;
+    margin:10px 0;
+  }
+
+  .play{
+    font-size:36px;
+    cursor:pointer;
+    margin-top:15px;
+    color:#1a73e8;
+  }
+
+  .status{
+    margin-top:12px;
+    font-weight:bold;
+  }
+  footer{
+    background: #D97706;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 20px;
+  }
+  footer i{
+    font-size: 40px;
+    margin: 120px;
+    padding: 10px;
+    margin-top: 0px;
+    color:black;
+    margin-bottom: 0px;
+  }
+</style>
+</head>
+
+<body>
+<div class="chanting">
+ <div class="box">
+  <h3>Select Mantra</h3>
+
+  <!-- Hidden file input -->
+  <input type="file" id="fileInput" accept="audio/*">
+
+  <!-- Upload box -->
+  <label for="fileInput" class="upload-box" id="uploadBox">
+    <i class="fa-solid fa-upload"></i>
+    Click to Upload Mantra
+  </label>
+
+  <!-- Repeat count -->
+  <input type="number" id="count" min="1" value="2">
+
+  <!-- Play / Pause -->
+  <i class="fa-solid fa-play play" id="playBtn"></i>
+
+  <!-- Status -->
+  <div class="status" id="status">Waiting…</div>
+
+  <!-- Audio -->
+  <audio id="audioPlayer"></audio>
+ </div>
+</div>
+<footer>
+  <a href="chanting.html">
+  <i class="fa-solid fa-microphone"></i>
+  </a>
+<a href="songs.html">
+  <i class="fa-solid fa-music"></i>
+</a>
+</footer>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const uploadBox = document.getElementById("uploadBox");
+const playBtn = document.getElementById("playBtn");
+const countInput = document.getElementById("count");
+const audioPlayer = document.getElementById("audioPlayer");
+const status = document.getElementById("status");
+
+let played = 0;
+let limit = 0;
+let isPaused = false;
+
+// Load audio
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  audioPlayer.src = URL.createObjectURL(file);
+  uploadBox.innerHTML = `<i class="fa-solid fa-om"></i>${file.name}`;
+  played = 0;
+  status.textContent = "Audio loaded";
+  playBtn.className = "fa-solid fa-play play";
+});
+
+// Play / Pause toggle
+playBtn.onclick = () => {
+  if (!audioPlayer.src) {
+    alert("Select an audio file first");
+    return;
+  }
+
+  limit = Number(countInput.value);
+
+  // Pause
+  if (!audioPlayer.paused) {
+    audioPlayer.pause();
+    isPaused = true;
+    playBtn.className = "fa-solid fa-play play";
+    status.textContent = "Paused ⏸";
+    return;
+  }
+
+  // Play / Resume
+  if (played < limit) {
+    isPaused = false;
+    playBtn.className = "fa-solid fa-pause play";
+    status.textContent = `Playing… (${played + 1}/${limit})`;
+    audioPlayer.play();
+  }
+};
+
+// Repeat logic
+audioPlayer.onended = () => {
+  if (isPaused) return;
+
+  played++;
+
+  if (played < limit) {
+    status.textContent = `Playing… (${played + 1}/${limit})`;
+    audioPlayer.play();
+  } else {
+    status.textContent = "🙏 Chant complete";
+    playBtn.className = "fa-solid fa-play play";
+    played = 0;
+  }
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devotional Music Player</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#FFF7E6;
+  color:#4A2E0A;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.player{
+  max-width:420px;
+  margin:auto;
+  background:#FFFFFF;
+  border-radius:14px;
+  box-shadow:0 6px 24px rgba(217,119,6,0.25);
+  padding:15px;
+}
+
+.song{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+
+.song:hover{
+  background:#FFF1D6;
+}
+
+.song.active{
+  background:#FFE8B3;
+}
+
+.song img{
+  width:60px;
+  height:60px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+.song p{
+  margin:0;
+  font-weight:bold;
+}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  margin-top:15px;
+}
+
+.controls button{
+  background:#D97706;
+  color:white;
+  border:none;
+  padding:12px 22px;
+  border-radius:50px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.controls button:hover{
+  background:#B45309;
+}
+
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
+}
+footer{
+    background: #D97706;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 20px;
+    position: relative;
+    top: 643px;
+  }
+  footer i{
+    font-size: 40px;
+    margin: 120px;
+    padding: 10px;
+    margin-top: 0px;
+    color:black;
+    margin-bottom: 0px;
+  }
+</style>
+<script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<h1>🙏 Devotional Songs</h1>
+
+<div class="player">
+
+  <!-- Song List -->
+  <div class="song" onclick="playSong(0)">
+    <img src="1.jpg" alt="">
+    <p>Irumudi Kattu Sabarimalaikku</p>
+  </div>
+
+  <div class="song" onclick="playSong(1)">
+    <img src="2.jpg" alt="">
+    <p>Hanuman Chalisa</p>
+  </div>
+
+  <div class="song" onclick="playSong(2)">
+    <img src="3.jpg" alt="">
+    <p>Gananayakaya song</p>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button onclick="togglePlay()">Play / Pause</button>
+  </div>
+
+  <div class="status" id="status">Select a song</div>
+
+  <audio id="audio"></audio>
+</div>
+<footer>
+  <a href="chanting.html">
+    <i class="fa-solid fa-microphone"></i>
+  </a>
+  <a href="songs.html">
+    <i class="fa-solid fa-music"></i>
+  </a>
+</footer>
+
+<script>
+const songs = [
+  {
+    title: "Irumudi Kattu Sabarimalaikku",
+    src: "song1.mp3"
+  },
+  {
+    title: "Hanuman Chalisa",
+    src: "song2.mp3"
+  },
+  {
+    title: "Another Devotional Song",
+    src: "song3.mp3"
+  }
+];
+
+const audio = document.getElementById("audio");
+const status = document.getElementById("status");
+const songDivs = document.querySelectorAll(".song");
+
+let currentSong = -1;
+
+// Play selected song
+function playSong(index){
+  // If new song selected
+  if(currentSong !== index){
+    audio.src = songs[index].src;
+    audio.play();
+    currentSong = index;
+
+    status.textContent = "Playing: " + songs[index].title;
+
+    songDivs.forEach(s => s.classList.remove("active"));
+    songDivs[index].classList.add("active");
+  } 
+  // Same song clicked again → resume
+  else {
+    audio.play();
+    status.textContent = "Playing…";
+  }
+}
+
+// Play / Pause button
+function togglePlay(){
+  if(currentSong === -1){
+    alert("Select a song first");
+    return;
+  }
+
+  if(audio.paused){
+    audio.play();
+    status.textContent = "Playing…";
+  } else {
+    audio.pause();
+    status.textContent = "Paused ⏸";
+  }
+}
+
+// When song ends → remove highlight
+audio.onended = () => {
+  status.textContent = "Song finished 🙏";
+  songDivs[currentSong].classList.remove("active");
+  currentSong = -1;
+};
+</script>
+
+</body>
+</html>
