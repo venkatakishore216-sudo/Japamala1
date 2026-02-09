@@ -10,22 +10,17 @@
 <style>
   body{
     font-family: Arial, sans-serif;
-    padding: 20px;
-    margin: 0px;
-    padding: 0px;
-    height: 100vh;
-    
+    margin: 0;
+    padding: 0;
+    height: 86vhh;
+    background:#FFF7E6;
   }
   .chanting{
     display: grid;
     justify-content: center;
     align-items: center;
-    background:#FFF7E6;
-    height:94vh;
-    margin: 0px;
-    padding: 0px;
+    height: 86vh;
   }
-
   .box{
     width:100%;
     max-width: 400px;
@@ -42,9 +37,8 @@
   input[type="file"]{
     display:none;
   }
-
   .upload-box{
-    height:200px;
+    height:150px;
     width:200px;
     border-radius:8px;
     border:2px dashed #1a73e8;
@@ -56,12 +50,18 @@
     color:#1a73e8;
     padding:10px;
   }
-
   .upload-box i{
     font-size:30px;
     margin-bottom:8px;
   }
-
+  select{
+    width: 200px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-bottom:10px;
+  }
   #count{
     width:80px;
     padding:8px;
@@ -69,14 +69,12 @@
     text-align:center;
     margin:10px 0;
   }
-
   .play{
     font-size:36px;
     cursor:pointer;
     margin-top:15px;
     color:#1a73e8;
   }
-
   .status{
     margin-top:12px;
     font-weight:bold;
@@ -84,17 +82,13 @@
   footer{
     background: #D97706;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     border-radius: 20px;
   }
   footer i{
     font-size: 40px;
-    margin: 120px;
-    padding: 10px;
-    margin-top: 0px;
+    margin: 20px;
     color:black;
-    margin-bottom: 0px;
   }
 </style>
 </head>
@@ -112,6 +106,15 @@
     <i class="fa-solid fa-upload"></i>
     Click to Upload Mantra
   </label>
+  <p>---OR----</p>
+
+  <!-- Select dropdown fallback -->
+  <label for="chants">Choose Chant</label>
+  <select id="chants" name="city">
+    <option value="">-- CHANTS --</option>
+    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/Untitled_0_p8ozm8.wav">Om Namo Venkatesaya Chanting</option>
+    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/om_nama_shivaya_lskkwd.mp3">OM Nama Shivaya</option>
+  </select>
 
   <!-- Repeat count -->
   <input type="number" id="count" min="1" value="2">
@@ -120,19 +123,16 @@
   <i class="fa-solid fa-play play" id="playBtn"></i>
 
   <!-- Status -->
-  <div class="status" id="status">waiting…</div>
+  <div class="status" id="status">Waiting…</div>
 
-  <!-- Audio -->
+  <!-- Audio player -->
   <audio id="audioPlayer"></audio>
  </div>
 </div>
+
 <footer>
-  <a href="index.html">
-  <i class="fa-solid fa-microphone"></i>
-  </a>
-<a href="songs.html">
-  <i class="fa-solid fa-music"></i>
-</a>
+  <a href="chanting.html"><i class="fa-solid fa-microphone"></i></a>
+  <a href="songs.html"><i class="fa-solid fa-music"></i></a>
 </footer>
 
 <script>
@@ -142,31 +142,46 @@ const playBtn = document.getElementById("playBtn");
 const countInput = document.getElementById("count");
 const audioPlayer = document.getElementById("audioPlayer");
 const status = document.getElementById("status");
+const selectChant = document.getElementById("chants");
 
 let played = 0;
 let limit = 0;
 let isPaused = false;
 
-// Load audio
+// Load audio if user selects file
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
 
   audioPlayer.src = URL.createObjectURL(file);
-  uploadBox.innerHTML = `<i class="fa-solid fa-om"></i>${file.name}`;
+  uploadBox.innerHTML = `<i class="fa-solid fa-om"></i> ${file.name}`;
   played = 0;
   status.textContent = "Audio loaded";
   playBtn.className = "fa-solid fa-play play";
 });
 
-// Play / Pause toggle
+// Play / Pause button
 playBtn.onclick = () => {
-  if (!audioPlayer.src) {
-    alert("Select an audio file first");
+  const file = fileInput.files[0];
+  const selectedChant = selectChant.value;
+
+  if (!file && !selectedChant) {
+    alert("Select an audio file or choose a chant");
     return;
   }
 
   limit = Number(countInput.value);
+
+  // Load file if uploaded
+  if (file) {
+    audioPlayer.src = URL.createObjectURL(file);
+    uploadBox.innerHTML = `<i class="fa-solid fa-om"></i> ${file.name}`;
+  }
+  // Load selected chant if no file
+  else if (selectedChant) {
+    audioPlayer.src = selectedChant;
+    uploadBox.innerHTML = `<i class="fa-solid fa-music"></i> ${selectChant.selectedOptions[0].text}`;
+  }
 
   // Pause
   if (!audioPlayer.paused) {
@@ -191,7 +206,6 @@ audioPlayer.onended = () => {
   if (isPaused) return;
 
   played++;
-
   if (played < limit) {
     status.textContent = `Playing… (${played + 1}/${limit})`;
     audioPlayer.play();
@@ -202,6 +216,5 @@ audioPlayer.onended = () => {
   }
 };
 </script>
-
 </body>
 </html>
