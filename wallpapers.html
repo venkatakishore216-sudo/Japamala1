@@ -3,337 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Japamala App</title>
+<title>Japamala Wallpapers</title>
 <script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
+
 <style>
-/* Reset & body */
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{
-    background:#FFF7E6;
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
-    padding-bottom:80px; /* for footer */
-    text-align:center;
-}
-
-/* Ads Carousel */
-.carousel{
-    position: relative;
-    max-width:400px;
-    margin:15px auto;
-    overflow:hidden;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-}
-.slides{
-    display:flex;
-    transition: transform 0.5s ease-in-out;
-}
-.slide{
-    min-width:100%;
+*{
+    margin:0;
+    padding:0;
     box-sizing:border-box;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    background:white;
-    padding:10px;
-}
-.slide img{
-    width:100%;
-    max-height:200px;
-    object-fit:cover;
-    border-radius:10px;
-}
-.slide h3{
-    font-size:16px;
-    margin:5px 0;
-}
-.slide a{
-    text-decoration:none;
-    padding:8px 15px;
-    background:#ff6a88;
-    color:white;
-    border-radius:8px;
-    font-weight:bold;
-    transition:0.3s;
-}
-.slide a:hover{
-    background:#ff3c6f;
+    font-family:'Poppins',sans-serif;
 }
 
-/* Chants Card */
-.chanting{
-    margin:20px auto;
-    max-width:420px;
+body{
+    background: linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+    text-align:center;
+    padding-bottom:120px;
 }
-.box{
-    background:white;
+@keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+header{
     padding:20px;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-}
-input[type="file"]{display:none;}
-.upload-box{
-    width:100%;
-    max-width:260px;
-    height:140px;
-    border:2px dashed #1a73e8;
-    margin:10px auto;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    color:#1a73e8;
-    border-radius:12px;
+    color:white;
+    font-size:clamp(22px,4vw,32px);
     font-weight:bold;
-    transition:0.3s;
+    animation: fadeDown 1s ease;
 }
-.upload-box:hover{background:#E8F0FE;}
-.upload-box i{font-size:28px;margin-bottom:8px;}
-select, #count{
-    width:100%;
-    max-width:260px;
-    padding:8px 10px;
-    margin:8px auto;
-    border-radius:8px;
-    border:1px solid #ccc;
-    display:block;
-    font-size:15px;
-}
-.play{
-    font-size:40px;
-    color:#1a73e8;
-    margin-top:12px;
-    cursor:pointer;
-    transition:0.3s;
-}
-.play:hover{transform:scale(1.2);}
-.status{margin-top:12px;font-weight:bold;}
+@keyframes fadeDown{from{opacity:0; transform:translateY(-20px);}to{opacity:1; transform:translateY(0);}}
 
-/* Wallpapers Gallery */
 #searchBar{
     width:90%;
     max-width:400px;
     padding:10px 15px;
-    margin:10px auto 15px auto;
+    margin:0 auto 20px auto;
     border-radius:25px;
     border:none;
     outline:none;
     font-size:16px;
     box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    transition:0.3s;
 }
+#searchBar:focus{
+    box-shadow:0 6px 18px rgba(0,0,0,0.2);
+}
+
 .gallery{
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
-    gap:12px;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap:18px;
     padding:0 20px 20px 20px;
 }
+
 .card{
     background:white;
-    border-radius:12px;
+    border-radius:18px;
     overflow:hidden;
-    box-shadow:0 6px 18px rgba(0,0,0,0.15);
-    transition:0.3s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    transition:0.4s ease;
+    cursor:pointer;
+}
+.card:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 15px 35px rgba(0,0,0,0.25);
 }
 .card img{
     width:100%;
-    height:150px;
+    height:220px;
     object-fit:cover;
+    transition:0.4s;
+    border-bottom:1px solid #ccc;
 }
-.download-btn{
+.card h3{
+    margin:8px 0;
+    font-size:14px;
+    color:#333;
+    padding:0 8px;
+}
+.card a{
     display:block;
-    padding:8px;
+    padding:10px;
     background:#ff6a88;
     color:white;
     text-decoration:none;
     font-weight:bold;
-    cursor:pointer;
     transition:0.3s;
 }
-.download-btn:hover{background:#ff3c6f;}
+.card a:hover{
+    background:#ff3c6f;
+}
 
-/* Footer Nav */
 footer{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    max-width:420px;
     background:#D97706;
     display:flex;
     justify-content:space-around;
     align-items:center;
-    padding:10px 0;
-    width:100%;
-    position:fixed;
-    bottom:0;
+    padding:6px 0;
+    border-radius:25px;
 }
 footer a{
     text-decoration:none;
-    flex:1;
-    text-align:center;
+    color:black;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:12px;
 }
 footer i{
     font-size:22px;
-    color:black;
+    margin-bottom:2px;
+    transition:0.3s;
 }
-footer i:hover{color:white;transform:scale(1.2);}
+footer a:hover i{
+    transform:scale(1.2);
+    color:white;
+}
 
-/* Responsive */
-@media(max-width:480px){
-    .slide img{max-height:140px;}
-    .card img{height:120px;}
-}
+@media(max-width:480px){.card img{height:180px;}}
+@media(min-width:1024px){.gallery{padding:0 80px 40px 80px;}}
 </style>
 </head>
+
 <body>
 
-<h2>🌸 Japamala Ads 🌸</h2>
-<div class="carousel">
-    <div class="slides" id="slides"></div>
-</div>
+<header>
+    🌸 Japamala Wallpapers 🌸
+</header>
 
-<!-- Chants -->
-<div class="chanting">
- <div class="box">
-  <h3>Select Mantra</h3>
-  <input type="file" id="fileInput" accept="audio/*">
-  <label for="fileInput" class="upload-box" id="uploadBox"><i class="fa-solid fa-upload"></i> Upload Mantra</label>
-  <p>--- OR ---</p>
-  <select id="chants">
-    <option value="">-- CHANTS --</option>
-    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/Untitled_0_p8ozm8.wav">Om Namo Venkatesaya</option>
-    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/om_nama_shivaya_lskkwd.mp3">OM Nama Shivaya</option>
-  </select>
-  Repeat: <input type="number" id="count" min="1" value="2">
-  <i class="fa-solid fa-play play" id="playBtn"></i>
-  <div class="status" id="status">Waiting…</div>
-  <audio id="audioPlayer"></audio>
- </div>
-</div>
-
-<!-- Wallpapers -->
-<h3>📸 Wallpapers</h3>
 <input type="text" id="searchBar" placeholder="Search Wallpapers...">
+
 <div class="gallery" id="gallery"></div>
 
 <footer>
-  <a href="chanting.html"><i class="fa-solid fa-microphone"></i></a>
-  <a href="songs.html"><i class="fa-solid fa-music"></i></a>
-  <a href="wallpapers.html"><i class="fa-solid fa-image"></i></a>
+  <a href="chanting.html">
+    <i class="fa-solid fa-microphone"></i>
+    <span>Chant</span>
+  </a>
+
+  <a href="songs.html">
+    <i class="fa-solid fa-music"></i>
+    <span>Songs</span>
+  </a>
+
+  <a href="wallpapers.html">
+    <i class="fa-solid fa-image"></i>
+    <span>Wallpapers</span>
+  </a>
 </footer>
 
 <script>
-// ===== Ads Carousel =====
-const ads = [
-  {title:"Japamala Songs", img:"/mnt/data/A_digital_advertisement_promotional_banner_adverti.png", link:"songs.html"},
-  {title:"Japamala Wallpapers", img:"/mnt/data/A_vibrant_digital_advertisement_showcases_the_Japa.png", link:"wallpapers.html"},
-  {title:"Bhagavad Gita", img:"/mnt/data/A_digital_advertisement_promoting_the_Bhagavad_Git.png", link:"bhagavad-gita.html"}
-];
-const slidesContainer = document.getElementById("slides");
-ads.forEach(ad=>{
-    const slide=document.createElement("div");
-    slide.className="slide";
-    slide.innerHTML=`<img src="${ad.img}" alt="${ad.title}"><h3>${ad.title}</h3><a href="${ad.link}">Visit</a>`;
-    slidesContainer.appendChild(slide);
-});
-let currentIndex=0;
-function showSlide(i){
-    const slides=document.querySelectorAll(".slide");
-    if(i>=slides.length) currentIndex=0;
-    if(i<0) currentIndex=slides.length-1;
-    slidesContainer.style.transform=`translateX(-${currentIndex*100}%)`;
-}
-function nextSlide(){currentIndex++; showSlide(currentIndex);}
-function prevSlide(){currentIndex--; showSlide(currentIndex);}
-setInterval(()=>{currentIndex++; showSlide(currentIndex);},5000);
-
-// ===== Chants =====
-const fileInput=document.getElementById("fileInput");
-const uploadBox=document.getElementById("uploadBox");
-const playBtn=document.getElementById("playBtn");
-const countInput=document.getElementById("count");
-const audioPlayer=document.getElementById("audioPlayer");
-const status=document.getElementById("status");
-const selectChant=document.getElementById("chants");
-
-let played=0, limit=0, isPaused=false;
-
-fileInput.addEventListener("change",()=>{
-    const file=fileInput.files[0];
-    if(!file) return;
-    audioPlayer.src=URL.createObjectURL(file);
-    uploadBox.innerHTML=`<i class="fa-solid fa-music"></i> ${file.name}`;
-    played=0; status.textContent="Audio Loaded ✅";
-    playBtn.className="fa-solid fa-play play";
-});
-
-playBtn.onclick=()=>{
-    const file=fileInput.files[0];
-    const selected=selectChant.value;
-    if(!file && !selected){alert("Select audio"); return;}
-    limit=Number(countInput.value);
-    if(file) audioPlayer.src=URL.createObjectURL(file);
-    else audioPlayer.src=selected;
-    if(!audioPlayer.paused){audioPlayer.pause(); isPaused=true; playBtn.className="fa-solid fa-play play"; status.textContent="Paused ⏸"; return;}
-    if(played<limit){isPaused=false; playBtn.className="fa-solid fa-pause play"; status.textContent=`Playing (${played+1}/${limit})`; audioPlayer.play();}
-};
-audioPlayer.onended=()=>{
-    if(isPaused) return;
-    played++;
-    if(played<limit){status.textContent=`Playing (${played+1}/${limit})`; audioPlayer.play();}
-    else{status.textContent="🙏 Chant Complete"; playBtn.className="fa-solid fa-play play"; played=0;}
-};
-
-// ===== Wallpapers =====
-const wallpapers=[
+// Wallpapers Data
+const wallpapers = [
     {name:"Venkateswara 1", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595249/3402578e419a55e9629630cd456fbf64_djjbdz.jpg"},
     {name:"Ganesh 2", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595133/ca9ab7bb9520559143dea7330cdd1156_lp7lyn.jpg"},
     {name:"Ganesh 3", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595069/1e610b5fb53e5296d282ae57e7ffdab5_lisrei.jpg"},
     {name:"Venkateswara 2", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771594956/984e7a90e9811ed5f2435d1a5188e39f_erk2te.jpg"},
-    {name:"Venkateswara 3", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597681/63e896d6890ae4ed5484c92c82538390_ptpryx.jpg"}
+    {name:"Venkateswara 3", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597681/63e896d6890ae4ed5484c92c82538390_ptpryx.jpg"},
+    {name:"Venkateswara 4", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597686/27df82f470bf1d707a0536ebf5644ee9_ff3qp7.jpg"},
+    {name:"Venkateswara 5", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597692/5baa4bb2410c07128d4d7fd0cf7ebe80_nbkopm.jpg"},
+    {name:"Venkateswara 6", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597706/9fdf0f8f5cc41034ebff169256364046_qd7kks.jpg"}
 ];
 
-const gallery=document.getElementById("gallery");
-const searchBar=document.getElementById("searchBar");
+const gallery = document.getElementById("gallery");
 
+// Display wallpapers
 function displayWallpapers(items){
-    gallery.innerHTML="";
-    items.forEach(item=>{
-        const card=document.createElement("div");
-        card.className="card";
-        card.innerHTML=`<img src="${item.src}" alt="${item.name}">
-            <div class="download-btn" onclick="forceDownload('${item.src}','${item.name}.jpg')">Download</div>`;
+    gallery.innerHTML = "";
+    items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${item.src}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <a href="#" onclick="openImage('${item.src}')">Download</a>
+        `;
         gallery.appendChild(card);
     });
 }
 
-// Blob download (works in WebView)
-async function forceDownload(url, filename){
-    try{
-        const response=await fetch(url);
-        const blob=await response.blob();
-        const blobUrl=URL.createObjectURL(blob);
-        const a=document.createElement('a');
-        a.href=blobUrl;
-        a.download=filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-    } catch(err){
-        alert("Download failed: "+err);
-    }
+// Open image in new tab (works for app + web)
+function openImage(url){
+    window.open(url, "_blank"); // Mobile app WebView or browser
 }
 
 // Initial display
 displayWallpapers(wallpapers);
 
 // Search functionality
-searchBar.addEventListener("input",()=>{
-    const query=searchBar.value.toLowerCase();
-    const filtered=wallpapers.filter(w=>w.name.toLowerCase().includes(query));
+const searchBar = document.getElementById("searchBar");
+searchBar.addEventListener("input", ()=>{
+    const query = searchBar.value.toLowerCase();
+    const filtered = wallpapers.filter(w => w.name.toLowerCase().includes(query));
     displayWallpapers(filtered);
 });
 </script>
+
 </body>
 </html>
