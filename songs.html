@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devotional Music Player</title>
+
+<script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  background:#FFF7E6;
+  color:#4A2E0A;
+  padding:20px;
+  padding-bottom:140px; /* space for controls + footer */
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:clamp(20px,4vw,28px);
+}
+
+.player{
+  max-width:420px;
+  width:100%;
+  margin:auto;
+  background:#FFFFFF;
+  border-radius:16px;
+  box-shadow:0 6px 24px rgba(217,119,6,0.25);
+  padding:15px;
+}
+
+/* Song Item */
+.song{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.song:hover{
+  background:#FFF1D6;
+}
+
+.song.active{
+  background:#FFE8B3;
+}
+
+.song img{
+  width:55px;
+  height:55px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+.song p{
+  font-weight:bold;
+  font-size:0.95rem;
+}
+
+/* Controls fixed above footer */
+.controls{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  max-width:420px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.controls button{
+  flex:1;
+  background:#D97706;
+  color:white;
+  border:none;
+  padding:12px 0;
+  border-radius:50px;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.controls button:hover{
+  background:#B45309;
+}
+
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
+  font-size:0.95rem;
+}
+
+/* Bottom Navigation */
+footer{
+  position:fixed;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  max-width:420px;
+  background:#D97706;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-radius:25px;
+  padding:6px 0;
+}
+
+footer a{
+  text-decoration:none;
+  color:black;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:12px;
+}
+
+footer i{
+  font-size:22px;
+  margin-bottom:2px;
+  transition:0.3s;
+}
+
+footer a:hover i{
+  transform:scale(1.2);
+  color:white;
+}
+
+/* Mobile Optimization */
+@media(max-width:480px){
+  .song img{
+    width:48px;
+    height:48px;
+  }
+
+  .controls button{
+    font-size:13px;
+    padding:10px 0;
+  }
+
+  footer{
+    bottom:5px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🙏 Devotional Songs</h1>
+
+<div class="player" id="player">
+  <div class="status" id="status">Select a song</div>
+  <audio id="audio"></audio>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button onclick="prevSong()">⏮️ Prev</button>
+  <button onclick="togglePlay()" id="play">▶️ Play</button>
+  <button onclick="nextSong()">⏭️ Next</button>
+</div>
+
+<!-- Bottom Navigation -->
+<footer>
+  <a href="chanting.html">
+    <i class="fa-solid fa-microphone"></i>
+    <span>Chant</span>
+  </a>
+
+  <a href="songs.html">
+    <i class="fa-solid fa-music"></i>
+    <span>Songs</span>
+  </a>
+
+  <a href="wallpapers.html">
+    <i class="fa-solid fa-image"></i>
+    <span>Wallpapers</span>
+  </a>
+</footer>
+
+<script>
+// Song list
+const songs = [
+  { title: "Irumudi Kattu Sabarimalaikku", src: "https://res.cloudinary.com/dhxy3marl/video/upload/v1770722343/Irumudikattu_Sabarimalaikku_final_oova01.wav", img: "1.jpg" },
+  { title: "Hanuman Chalisa", src: "song2.mp3", img: "2.jpg" },
+  { title: "Gananayakaya Song", src: "song3.mp3", img: "3.jpg" },
+  { title: "HARA HARA SHAMBHO", src: "https://res.cloudinary.com/dhxy3marl/video/upload/v1770722356/HARA_HARA_FINAL_i8pwgi.wav", img: "https://res.cloudinary.com/dhxy3marl/image/upload/v1770722238/1721687f42c048ec4c1a99fad73c5685_zeavoz.jpg" },
+  { title: "Akhilanda Koti", src: "https://res.cloudinary.com/dhxy3marl/video/upload/v1770722338/3-Akhilanda_Koti_final_ydog8q.wav", img: "https://res.cloudinary.com/dhxy3marl/image/upload/v1770722239/Shri_Venkateshwara_swami___Do_not_repost_without_permission__Beautiful_image_by_anjalicreations02__F...jpg" },
+  { title: "Veyi Namala Vada", src: "https://res.cloudinary.com/dhxy3marl/video/upload/v1770722329/1-Veyyi_Vemulavada-SenSongsMp3.Co_tegvhe.mp3", img: "https://res.cloudinary.com/dhxy3marl/image/upload/v1770722239/Shri_Venkateshwara_swami___Do_not_repost_without_permission__Beautiful_image_by_anjalicreations02__F...jpg" },
+  { title: "Om Namo Bhagavate", src: "https://res.cloudinary.com/dhxy3marl/video/upload/v1770722336/Om_Namo_Bhagavate_Vasudevaya_Tamil_KoshalWorld.Com_ebiyfc.mp3", img: "https://res.cloudinary.com/dhxy3marl/image/upload/v1770619594/15420_2_cxdpxm.png" }
+];
+
+const player = document.getElementById("player");
+const audio = document.getElementById("audio");
+const status = document.getElementById("status");
+const playBtn = document.getElementById("play");
+
+let currentSong = -1;
+
+// Generate songs
+songs.forEach((song,index)=>{
+  const div=document.createElement("div");
+  div.className="song";
+  div.innerHTML=`<img src="${song.img}"><p>${song.title}</p>`;
+  div.onclick=()=>playSong(index);
+  player.insertBefore(div,status);
+});
+
+const songDivs=document.querySelectorAll(".song");
+
+function playSong(index){
+  audio.src=songs[index].src;
+  audio.play();
+  currentSong=index;
+  status.textContent="Playing: "+songs[index].title;
+  songDivs.forEach(s=>s.classList.remove("active"));
+  songDivs[index].classList.add("active");
+  playBtn.textContent="⏸️ Pause";
+}
+
+function togglePlay(){
+  if(currentSong===-1){alert("Select a song");return;}
+  if(audio.paused){
+    audio.play();
+    playBtn.textContent="⏸️ Pause";
+    status.textContent="Playing…";
+  }else{
+    audio.pause();
+    playBtn.textContent="▶️ Play";
+    status.textContent="Paused ⏸";
+  }
+}
+
+function nextSong(){
+  if(currentSong===-1)return;
+  let next=(currentSong+1)%songs.length;
+  playSong(next);
+}
+
+function prevSong(){
+  if(currentSong===-1)return;
+  let prev=(currentSong-1+songs.length)%songs.length;
+  playSong(prev);
+}
+
+audio.onended=()=>nextSong();
+</script>
+
+</body>
+</html>

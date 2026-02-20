@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chant Player</title>
+
+<script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  background:#FFF7E6;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Main Area */
+.chanting{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* Card */
+.box{
+  width:100%;
+  max-width:420px;
+  padding:25px;
+  border-radius:20px;
+  background:#fff;
+  text-align:center;
+  box-shadow:0 10px 40px rgba(0,0,0,0.15);
+}
+
+/* File Upload */
+input[type="file"]{
+  display:none;
+}
+
+.upload-box{
+  width:100%;
+  max-width:260px;
+  height:150px;
+  border-radius:12px;
+  border:2px dashed #1a73e8;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  font-weight:bold;
+  margin:15px auto;
+  color:#1a73e8;
+  padding:10px;
+  transition:0.3s;
+}
+
+.upload-box:hover{
+  background:#E8F0FE;
+}
+
+.upload-box i{
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+/* Dropdown */
+select{
+  width:100%;
+  max-width:260px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:15px;
+  margin:10px auto;
+  display:block;
+}
+
+/* Repeat Count */
+#count{
+  width:90px;
+  padding:8px;
+  font-size:16px;
+  text-align:center;
+  margin:15px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+/* Play Button */
+.play{
+  font-size:42px;
+  cursor:pointer;
+  margin-top:15px;
+  color:#1a73e8;
+  transition:0.3s;
+}
+
+.play:hover{
+  transform:scale(1.2);
+}
+
+/* Status */
+.status{
+  margin-top:15px;
+  font-weight:bold;
+  font-size:15px;
+}
+
+/* Footer Navigation */
+footer{
+  background:#D97706;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:12px 0;
+  width:100%;
+  position:sticky;
+  bottom:0;
+}
+
+footer a{
+  text-decoration:none;
+  flex:1;
+  text-align:center;
+}
+
+footer i{
+  font-size:26px;
+  color:black;
+  transition:0.3s;
+}
+
+footer i:hover{
+  transform:scale(1.2);
+  color:white;
+}
+
+/* Tablet */
+@media(min-width:600px){
+  .box{
+    max-width:480px;
+  }
+}
+
+/* Desktop */
+@media(min-width:1024px){
+  .box{
+    max-width:520px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="chanting">
+ <div class="box">
+  <h3>Select Mantra</h3>
+
+  <!-- Hidden file input -->
+  <input type="file" id="fileInput" accept="audio/*">
+
+  <!-- Upload box -->
+  <label for="fileInput" class="upload-box" id="uploadBox">
+    <i class="fa-solid fa-upload"></i>
+    Click to Upload Mantra
+  </label>
+
+  <p>--- OR ---</p>
+
+  <!-- Dropdown -->
+  <select id="chants">
+    <option value="">-- CHANTS --</option>
+    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/Untitled_0_p8ozm8.wav">
+      Om Namo Venkatesaya Chanting
+    </option>
+    <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/om_nama_shivaya_lskkwd.mp3">
+      OM Nama Shivaya
+    </option>
+  </select>
+
+  <!-- Repeat Count -->
+  <div>
+    Repeat:
+    <input type="number" id="count" min="1" value="2">
+  </div>
+
+  <!-- Play Button -->
+  <i class="fa-solid fa-play play" id="playBtn"></i>
+
+  <!-- Status -->
+  <div class="status" id="status">Waiting…</div>
+
+  <!-- Audio -->
+  <audio id="audioPlayer"></audio>
+ </div>
+</div>
+
+<footer>
+  <a href="chanting.html">
+    <i class="fa-solid fa-microphone"></i>
+  </a>
+
+  <a href="songs.html">
+    <i class="fa-solid fa-music"></i>
+  </a>
+
+  <a href="wallpapers.html">
+    <i class="fa-solid fa-image"></i>
+  </a>
+</footer>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const uploadBox = document.getElementById("uploadBox");
+const playBtn = document.getElementById("playBtn");
+const countInput = document.getElementById("count");
+const audioPlayer = document.getElementById("audioPlayer");
+const status = document.getElementById("status");
+const selectChant = document.getElementById("chants");
+
+let played = 0;
+let limit = 0;
+let isPaused = false;
+
+/* File Upload */
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  audioPlayer.src = URL.createObjectURL(file);
+  uploadBox.innerHTML = `<i class="fa-solid fa-music"></i> ${file.name}`;
+  played = 0;
+  status.textContent = "Audio Loaded ✅";
+  playBtn.className = "fa-solid fa-play play";
+});
+
+/* Play / Pause */
+playBtn.onclick = () => {
+  const file = fileInput.files[0];
+  const selectedChant = selectChant.value;
+
+  if (!file && !selectedChant) {
+    alert("Select an audio file or choose a chant");
+    return;
+  }
+
+  limit = Number(countInput.value);
+
+  if (file) {
+    audioPlayer.src = URL.createObjectURL(file);
+  } else {
+    audioPlayer.src = selectedChant;
+  }
+
+  /* Pause */
+  if (!audioPlayer.paused) {
+    audioPlayer.pause();
+    isPaused = true;
+    playBtn.className = "fa-solid fa-play play";
+    status.textContent = "Paused ⏸";
+    return;
+  }
+
+  /* Play */
+  if (played < limit) {
+    isPaused = false;
+    playBtn.className = "fa-solid fa-pause play";
+    status.textContent = `Playing (${played + 1}/${limit})`;
+    audioPlayer.play();
+  }
+};
+
+/* Repeat Logic */
+audioPlayer.onended = () => {
+  if (isPaused) return;
+
+  played++;
+  if (played < limit) {
+    status.textContent = `Playing (${played + 1}/${limit})`;
+    audioPlayer.play();
+  } else {
+    status.textContent = "🙏 Chant Complete";
+    playBtn.className = "fa-solid fa-play play";
+    played = 0;
+  }
+};
+</script>
+
+</body>
+</html>
