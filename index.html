@@ -3,48 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chant Player</title>
-
+<title>Japamala App</title>
 <script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{
-  font-family: Arial, sans-serif;
-  background:#FFF7E6;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+    background:#FFF7E6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    padding-bottom:80px; /* space for bottom nav */
 }
 
-/* Main Area */
+/* Ads Carousel */
+.carousel{
+    position: relative;
+    max-width:400px;
+    margin:20px auto;
+    overflow:hidden;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+.slides{
+    display:flex;
+    transition: transform 0.5s ease-in-out;
+}
+.slide{
+    min-width:100%;
+    box-sizing:border-box;
+    background:white;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+.slide img{
+    width:100%;
+    border-radius:10px;
+    max-height:200px;
+    object-fit:cover;
+}
+.slide h3{
+    font-size:16px;
+    margin:0;
+    color:#333;
+}
+.slide a{
+    text-decoration:none;
+    padding:8px 18px;
+    background:#ff6a88;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+    transition:0.3s;
+}
+.slide a:hover{
+    background:#ff3c6f;
+}
+.prev, .next{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.4);
+    color:white;
+    padding:10px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+}
+.prev{left:10px;}
+.next{right:10px;}
+.prev:hover,.next:hover{background:rgba(0,0,0,0.6);}
+
+/* Chant Player */
 .chanting{
-  flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
-
-/* Card */
-.box{
-  width:100%;
-  max-width:420px;
-  padding:25px;
-  border-radius:20px;
-  background:#fff;
-  text-align:center;
-  box-shadow:0 10px 40px rgba(0,0,0,0.15);
-}
-
-/* File Upload */
-input[type="file"]{
-  display:none;
+    width:100%;
+    max-width:420px;
+    padding:20px;
+    border-radius:20px;
+    background:white;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.15);
+    margin:20px auto;
 }
 
 .upload-box{
@@ -64,17 +108,9 @@ input[type="file"]{
   padding:10px;
   transition:0.3s;
 }
+.upload-box:hover{background:#E8F0FE;}
+.upload-box i{font-size:30px;margin-bottom:8px;}
 
-.upload-box:hover{
-  background:#E8F0FE;
-}
-
-.upload-box i{
-  font-size:30px;
-  margin-bottom:8px;
-}
-
-/* Dropdown */
 select{
   width:100%;
   max-width:260px;
@@ -85,8 +121,6 @@ select{
   margin:10px auto;
   display:block;
 }
-
-/* Repeat Count */
 #count{
   width:90px;
   padding:8px;
@@ -96,8 +130,6 @@ select{
   border-radius:8px;
   border:1px solid #ccc;
 }
-
-/* Play Button */
 .play{
   font-size:42px;
   cursor:pointer;
@@ -105,81 +137,66 @@ select{
   color:#1a73e8;
   transition:0.3s;
 }
-
-.play:hover{
-  transform:scale(1.2);
-}
-
-/* Status */
+.play:hover{transform:scale(1.2);}
 .status{
   margin-top:15px;
   font-weight:bold;
   font-size:15px;
 }
 
-/* Footer Navigation */
+/* Bottom Nav Bar */
 footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
   background:#D97706;
   display:flex;
   justify-content:space-around;
-  align-items:center;
-  padding:12px 0;
-  width:100%;
-  position:sticky;
-  bottom:0;
+  padding:8px 0;
 }
-
 footer a{
   text-decoration:none;
   flex:1;
   text-align:center;
-}
-
-footer i{
-  font-size:26px;
   color:black;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:12px;
+}
+footer i{
+  font-size:22px;
+  margin-bottom:2px;
   transition:0.3s;
 }
+footer a:hover i{transform:scale(1.2);color:white;}
 
-footer i:hover{
-  transform:scale(1.2);
-  color:white;
-}
-
-/* Tablet */
-@media(min-width:600px){
-  .box{
-    max-width:480px;
-  }
-}
-
-/* Desktop */
-@media(min-width:1024px){
-  .box{
-    max-width:520px;
-  }
+/* Responsive */
+@media(max-width:480px){
+    .slide img{max-height:150px;}
+    .chanting{padding:15px;}
 }
 </style>
 </head>
 
 <body>
 
+<h2> 🌸Japamala🌸</h2>
+
+<!-- Ads Carousel -->
+<div class="carousel">
+    <div class="slides" id="slides"></div>
+</div>
+
+<!-- Chant Player -->
 <div class="chanting">
- <div class="box">
   <h3>Select Mantra</h3>
-
-  <!-- Hidden file input -->
   <input type="file" id="fileInput" accept="audio/*">
-
-  <!-- Upload box -->
   <label for="fileInput" class="upload-box" id="uploadBox">
-    <i class="fa-solid fa-upload"></i>
-    Click to Upload Mantra
+    <i class="fa-solid fa-upload"></i> Click to Upload Mantra
   </label>
-
   <p>--- OR ---</p>
-
-  <!-- Dropdown -->
   <select id="chants">
     <option value="">-- CHANTS --</option>
     <option value="https://res.cloudinary.com/dhxy3marl/video/upload/v1770622290/Untitled_0_p8ozm8.wav">
@@ -189,39 +206,51 @@ footer i:hover{
       OM Nama Shivaya
     </option>
   </select>
-
-  <!-- Repeat Count -->
-  <div>
-    Repeat:
-    <input type="number" id="count" min="1" value="2">
-  </div>
-
-  <!-- Play Button -->
+  Repeat:
+  <input type="number" id="count" min="1" value="2">
   <i class="fa-solid fa-play play" id="playBtn"></i>
-
-  <!-- Status -->
   <div class="status" id="status">Waiting…</div>
-
-  <!-- Audio -->
   <audio id="audioPlayer"></audio>
- </div>
 </div>
 
+<!-- Bottom Nav -->
 <footer>
-  <a href="chanting.html">
-    <i class="fa-solid fa-microphone"></i>
-  </a>
-
-  <a href="songs.html">
-    <i class="fa-solid fa-music"></i>
-  </a>
-
-  <a href="wallpapers.html">
-    <i class="fa-solid fa-image"></i>
-  </a>
+  <a href="chanting.html"><i class="fa-solid fa-microphone"></i><span>Chant</span></a>
+  <a href="songs.html"><i class="fa-solid fa-music"></i><span>Songs</span></a>
+  <a href="wallpapers.html"><i class="fa-solid fa-image"></i><span>Wallpapers</span></a>
 </footer>
 
 <script>
+// Ads Data
+const ads = [
+    {title:"Japamala Songs", img:"sa.png", link:"songs.html"},
+    {title:"Japamala Wallpapers", img:"wa.png", link:"wallpapers.html"},
+    {title:"Bhagavad Gita", img:"bg.png", link:"bhagavad-gita.html"}
+];
+const slidesContainer = document.getElementById("slides");
+ads.forEach(ad=>{
+    const slide = document.createElement("div");
+    slide.className="slide";
+    slide.innerHTML=`
+        <img src="${ad.img}" alt="${ad.title}">
+        <h3>${ad.title}</h3>
+        <a href="${ad.link}">Visit Now</a>
+    `;
+    slidesContainer.appendChild(slide);
+});
+
+let currentIndex=0;
+function showSlide(index){
+    const slides=document.querySelectorAll(".slide");
+    if(index>=slides.length) currentIndex=0;
+    if(index<0) currentIndex=slides.length-1;
+    slidesContainer.style.transform=`translateX(-${currentIndex*100}%)`;
+}
+function nextSlide(){currentIndex++; showSlide(currentIndex);}
+function prevSlide(){currentIndex--; showSlide(currentIndex);}
+setInterval(()=>{currentIndex++; showSlide(currentIndex);},5000);
+
+// Chant Player
 const fileInput = document.getElementById("fileInput");
 const uploadBox = document.getElementById("uploadBox");
 const playBtn = document.getElementById("playBtn");
@@ -234,11 +263,9 @@ let played = 0;
 let limit = 0;
 let isPaused = false;
 
-/* File Upload */
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
-
   audioPlayer.src = URL.createObjectURL(file);
   uploadBox.innerHTML = `<i class="fa-solid fa-music"></i> ${file.name}`;
   played = 0;
@@ -246,54 +273,36 @@ fileInput.addEventListener("change", () => {
   playBtn.className = "fa-solid fa-play play";
 });
 
-/* Play / Pause */
 playBtn.onclick = () => {
   const file = fileInput.files[0];
   const selectedChant = selectChant.value;
-
-  if (!file && !selectedChant) {
-    alert("Select an audio file or choose a chant");
-    return;
-  }
-
+  if(!file && !selectedChant){ alert("Select an audio file or choose a chant"); return; }
   limit = Number(countInput.value);
-
-  if (file) {
-    audioPlayer.src = URL.createObjectURL(file);
-  } else {
-    audioPlayer.src = selectedChant;
-  }
-
-  /* Pause */
-  if (!audioPlayer.paused) {
+  audioPlayer.src = file ? URL.createObjectURL(file) : selectedChant;
+  if(!audioPlayer.paused){
     audioPlayer.pause();
-    isPaused = true;
-    playBtn.className = "fa-solid fa-play play";
-    status.textContent = "Paused ⏸";
+    isPaused=true;
+    playBtn.className="fa-solid fa-play play";
+    status.textContent="Paused ⏸";
     return;
   }
-
-  /* Play */
-  if (played < limit) {
-    isPaused = false;
-    playBtn.className = "fa-solid fa-pause play";
-    status.textContent = `Playing (${played + 1}/${limit})`;
+  if(played<limit){
+    isPaused=false;
+    playBtn.className="fa-solid fa-pause play";
+    status.textContent=`Playing (${played+1}/${limit})`;
     audioPlayer.play();
   }
 };
-
-/* Repeat Logic */
-audioPlayer.onended = () => {
-  if (isPaused) return;
-
+audioPlayer.onended = ()=>{
+  if(isPaused) return;
   played++;
-  if (played < limit) {
-    status.textContent = `Playing (${played + 1}/${limit})`;
+  if(played<limit){
+    status.textContent=`Playing (${played+1}/${limit})`;
     audioPlayer.play();
   } else {
-    status.textContent = "🙏 Chant Complete";
-    playBtn.className = "fa-solid fa-play play";
-    played = 0;
+    status.textContent="🙏 Chant Complete";
+    playBtn.className="fa-solid fa-play play";
+    played=0;
   }
 };
 </script>
