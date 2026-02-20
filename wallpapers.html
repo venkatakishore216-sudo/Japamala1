@@ -7,13 +7,19 @@
 <script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
 body{
     background: linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
     background-size:400% 400%;
     animation: gradientBG 10s ease infinite;
     text-align:center;
-    padding-bottom:140px;
+    padding-bottom:120px;
 }
 @keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
@@ -55,57 +61,41 @@ header{
     overflow:hidden;
     box-shadow:0 10px 25px rgba(0,0,0,0.15);
     transition:0.4s ease;
-    animation: fadeUp 0.8s ease;
+    cursor:pointer;
 }
-@keyframes fadeUp{from{opacity:0; transform:translateY(30px);}to{opacity:1; transform:translateY(0);}}
-
 .card:hover{
     transform:translateY(-8px) scale(1.03);
     box-shadow:0 15px 35px rgba(0,0,0,0.25);
 }
-
 .card img{
     width:100%;
-    height:260px;
+    height:220px;
     object-fit:cover;
     transition:0.4s;
+    border-bottom:1px solid #ccc;
 }
-.card:hover img{
-    transform:scale(1.08);
+.card h3{
+    margin:8px 0;
+    font-size:14px;
+    color:#333;
+    padding:0 8px;
 }
-
-.download-btn{
+.card a{
     display:block;
-    padding:12px;
+    padding:10px;
     background:#ff6a88;
     color:white;
     text-decoration:none;
     font-weight:bold;
     transition:0.3s;
-    position:relative;
-    overflow:hidden;
-    cursor:pointer;
 }
-.download-btn:hover{
+.card a:hover{
     background:#ff3c6f;
-}
-.download-btn::after{
-    content:"";
-    position:absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    left:-100%;
-    background:rgba(255,255,255,0.3);
-    transition:0.5s;
-}
-.download-btn:hover::after{
-    left:100%;
 }
 
 footer{
     position:fixed;
-    bottom:10px;
+    bottom:0;
     left:50%;
     transform:translateX(-50%);
     width:90%;
@@ -114,8 +104,8 @@ footer{
     display:flex;
     justify-content:space-around;
     align-items:center;
-    border-radius:25px;
     padding:6px 0;
+    border-radius:25px;
 }
 footer a{
     text-decoration:none;
@@ -135,7 +125,7 @@ footer a:hover i{
     color:white;
 }
 
-@media(max-width:480px){.card img{height:220px;}}
+@media(max-width:480px){.card img{height:180px;}}
 @media(min-width:1024px){.gallery{padding:0 80px 40px 80px;}}
 </style>
 </head>
@@ -168,7 +158,7 @@ footer a:hover i{
 </footer>
 
 <script>
-// Wallpapers Data (Cloudinary URLs)
+// Wallpapers Data
 const wallpapers = [
     {name:"Venkateswara 1", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595249/3402578e419a55e9629630cd456fbf64_djjbdz.jpg"},
     {name:"Ganesh 2", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595133/ca9ab7bb9520559143dea7330cdd1156_lp7lyn.jpg"},
@@ -184,37 +174,22 @@ const gallery = document.getElementById("gallery");
 
 // Display wallpapers
 function displayWallpapers(items){
-    gallery.innerHTML="";
-    items.forEach(item=>{
+    gallery.innerHTML = "";
+    items.forEach(item => {
         const card = document.createElement("div");
-        card.className="card";
-        card.innerHTML=`
+        card.className = "card";
+        card.innerHTML = `
             <img src="${item.src}" alt="${item.name}">
-            <div class="download-btn" onclick="forceDownload('${item.src}','${item.name}.jpg')">Download</div>
+            <h3>${item.name}</h3>
+            <a href="#" onclick="openImage('${item.src}')">Download</a>
         `;
         gallery.appendChild(card);
     });
 }
 
-// Force download using Blob (works for Cloudinary URLs)
-async function forceDownload(url, filename){
-    try {
-        const res = await fetch(url, {mode:'cors'});
-        const blob = await res.blob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        URL.revokeObjectURL(blobUrl);
-    } catch(err){
-        alert("Download failed! Try opening image in new tab.");
-        console.error(err);
-    }
+// Open image in new tab (works for app + web)
+function openImage(url){
+    window.open(url, "_blank"); // Mobile app WebView or browser
 }
 
 // Initial display
