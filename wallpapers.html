@@ -4,33 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Japamala Wallpapers</title>
-
 <script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{
     background: linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
     background-size:400% 400%;
     animation: gradientBG 10s ease infinite;
     text-align:center;
-    padding-bottom:140px; /* space for footer */
+    padding-bottom:140px; 
 }
+@keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-/* Animated Gradient */
-@keyframes gradientBG {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
-
-/* Header */
 header{
     padding:20px;
     color:white;
@@ -38,13 +24,8 @@ header{
     font-weight:bold;
     animation: fadeDown 1s ease;
 }
+@keyframes fadeDown{from{opacity:0; transform:translateY(-20px);}to{opacity:1; transform:translateY(0);}}
 
-@keyframes fadeDown{
-    from{opacity:0; transform:translateY(-20px);}
-    to{opacity:1; transform:translateY(0);}
-}
-
-/* Search Bar */
 #searchBar{
     width:90%;
     max-width:400px;
@@ -57,12 +38,10 @@ header{
     box-shadow:0 4px 12px rgba(0,0,0,0.1);
     transition:0.3s;
 }
-
 #searchBar:focus{
     box-shadow:0 6px 18px rgba(0,0,0,0.2);
 }
 
-/* Gallery */
 .gallery{
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
@@ -70,7 +49,6 @@ header{
     padding:0 20px 20px 20px;
 }
 
-/* Card */
 .card{
     background:white;
     border-radius:18px;
@@ -79,11 +57,7 @@ header{
     transition:0.4s ease;
     animation: fadeUp 0.8s ease;
 }
-
-@keyframes fadeUp{
-    from{opacity:0; transform:translateY(30px);}
-    to{opacity:1; transform:translateY(0);}
-}
+@keyframes fadeUp{from{opacity:0; transform:translateY(30px);}to{opacity:1; transform:translateY(0);}}
 
 .card:hover{
     transform:translateY(-8px) scale(1.03);
@@ -96,12 +70,10 @@ header{
     object-fit:cover;
     transition:0.4s;
 }
-
 .card:hover img{
     transform:scale(1.08);
 }
 
-/* Download Button */
 .download-btn{
     display:block;
     padding:12px;
@@ -112,12 +84,11 @@ header{
     transition:0.3s;
     position:relative;
     overflow:hidden;
+    cursor:pointer;
 }
-
 .download-btn:hover{
     background:#ff3c6f;
 }
-
 .download-btn::after{
     content:"";
     position:absolute;
@@ -128,12 +99,10 @@ header{
     background:rgba(255,255,255,0.3);
     transition:0.5s;
 }
-
 .download-btn:hover::after{
     left:100%;
 }
 
-/* Footer Navigation */
 footer{
     position:fixed;
     bottom:10px;
@@ -148,7 +117,6 @@ footer{
     border-radius:25px;
     padding:6px 0;
 }
-
 footer a{
     text-decoration:none;
     color:black;
@@ -157,29 +125,17 @@ footer a{
     align-items:center;
     font-size:12px;
 }
-
 footer i{
     font-size:22px;
     margin-bottom:2px;
     transition:0.3s;
 }
-
 footer a:hover i{
     transform:scale(1.2);
     color:white;
 }
-
-/* Extra Responsive Tweaks */
-@media(max-width:480px){
-    .card img{
-        height:220px;
-    }
-}
-@media(min-width:1024px){
-    .gallery{
-        padding:0 80px 40px 80px;
-    }
-}
+@media(max-width:480px){.card img{height:220px;}}
+@media(min-width:1024px){.gallery{padding:0 80px 40px 80px;}}
 </style>
 </head>
 
@@ -189,16 +145,12 @@ footer a:hover i{
     🌸 Japamala Wallpapers 🌸
 </header>
 
-<!-- Search Bar -->
 <input type="text" id="searchBar" placeholder="Search Wallpapers...">
 
-<div class="gallery" id="gallery">
-    <!-- Wallpapers will go here -->
-</div>
+<div class="gallery" id="gallery"></div>
 
-<!-- Bottom Navigation -->
 <footer>
-  <a href="index.html">
+  <a href="chanting.html">
     <i class="fa-solid fa-microphone"></i>
     <span>Chant</span>
   </a>
@@ -215,27 +167,39 @@ footer a:hover i{
 </footer>
 
 <script>
-// Wallpapers Data
+// Wallpapers Data (Cloudinary URLs)
 const wallpapers = [
-    {name:"krishna 1", src:"w1.jpg"},
-    {name:"venkateswara", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771594956/984e7a90e9811ed5f2435d1a5188e39f_erk2te.jpg"},
-    {name:"Ganesh", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595133/ca9ab7bb9520559143dea7330cdd1156_lp7lyn.jpg"},
-    {name:"Ganesh ", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595069/1e610b5fb53e5296d282ae57e7ffdab5_lisrei.jpg"},
-    {name:"venkateswara", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771595249/3402578e419a55e9629630cd456fbf64_djjbdz.jpg"}
+    {name:"Japamala 1", src:"https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1687654321/wall1.jpg"},
+    {name:"Japamala 2", src:"https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1687654321/wall2.jpg"},
+    {name:"Japamala 3", src:"https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1687654321/wall3.jpg"},
+    {name:"Japamala Pink", src:"https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1687654321/wall4.jpg"},
+    {name:"Japamala Purple", src:"https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1687654321/wall5.jpg"}
 ];
 
-// Populate gallery
 const gallery = document.getElementById("gallery");
 
+// Function to display wallpapers
 function displayWallpapers(items){
     gallery.innerHTML="";
     items.forEach(item=>{
         const card = document.createElement("div");
         card.className="card";
-        card.innerHTML=`<img src="${item.src}" alt="${item.name}">
-                        <a href="${item.src}" download class="download-btn">Download</a>`;
+        card.innerHTML=`
+            <img src="${item.src}" alt="${item.name}">
+            <div class="download-btn" onclick="forceDownload('${item.src}','${item.name}.jpg')">Download</div>
+        `;
         gallery.appendChild(card);
     });
+}
+
+// Force download function
+function forceDownload(url, filename){
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 // Initial display
@@ -245,7 +209,7 @@ displayWallpapers(wallpapers);
 const searchBar = document.getElementById("searchBar");
 searchBar.addEventListener("input", ()=>{
     const query = searchBar.value.toLowerCase();
-    const filtered = wallpapers.filter(w=> w.name.toLowerCase().includes(query));
+    const filtered = wallpapers.filter(w => w.name.toLowerCase().includes(query));
     displayWallpapers(filtered);
 });
 </script>
