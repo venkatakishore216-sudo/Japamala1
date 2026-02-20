@@ -7,19 +7,13 @@
 <script src="https://kit.fontawesome.com/501f9e126f.js" crossorigin="anonymous"></script>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{
     background: linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
     background-size:400% 400%;
     animation: gradientBG 10s ease infinite;
     text-align:center;
-    padding-bottom:120px;
+    padding-bottom:140px; 
 }
 @keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
@@ -61,41 +55,44 @@ header{
     overflow:hidden;
     box-shadow:0 10px 25px rgba(0,0,0,0.15);
     transition:0.4s ease;
-    cursor:pointer;
+    animation: fadeUp 0.8s ease;
 }
+@keyframes fadeUp{from{opacity:0; transform:translateY(30px);}to{opacity:1; transform:translateY(0);}}
+
 .card:hover{
     transform:translateY(-8px) scale(1.03);
     box-shadow:0 15px 35px rgba(0,0,0,0.25);
 }
+
 .card img{
     width:100%;
     height:220px;
     object-fit:cover;
     transition:0.4s;
-    border-bottom:1px solid #ccc;
 }
-.card h3{
-    margin:8px 0;
-    font-size:14px;
-    color:#333;
-    padding:0 8px;
+.card:hover img{
+    transform:scale(1.08);
 }
-.card a{
+
+.download-btn{
     display:block;
-    padding:10px;
+    padding:12px;
     background:#ff6a88;
     color:white;
     text-decoration:none;
     font-weight:bold;
     transition:0.3s;
+    cursor:pointer;
+    border-radius:8px;
+    margin:10px auto 15px auto;
 }
-.card a:hover{
+.download-btn:hover{
     background:#ff3c6f;
 }
 
 footer{
     position:fixed;
-    bottom:0;
+    bottom:10px;
     left:50%;
     transform:translateX(-50%);
     width:90%;
@@ -104,20 +101,17 @@ footer{
     display:flex;
     justify-content:space-around;
     align-items:center;
-    padding:6px 0;
     border-radius:25px;
+    padding:6px 0;
 }
 footer a{
     text-decoration:none;
-    color:black;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    font-size:12px;
+    flex:1;
+    text-align:center;
 }
 footer i{
     font-size:22px;
-    margin-bottom:2px;
+    color:black;
     transition:0.3s;
 }
 footer a:hover i{
@@ -125,6 +119,7 @@ footer a:hover i{
     color:white;
 }
 
+/* Responsive */
 @media(max-width:480px){.card img{height:180px;}}
 @media(min-width:1024px){.gallery{padding:0 80px 40px 80px;}}
 </style>
@@ -170,26 +165,31 @@ const wallpapers = [
     {name:"Venkateswara 6", src:"https://res.cloudinary.com/dhxy3marl/image/upload/v1771597706/9fdf0f8f5cc41034ebff169256364046_qd7kks.jpg"}
 ];
 
+// Display Wallpapers
 const gallery = document.getElementById("gallery");
 
-// Display wallpapers
 function displayWallpapers(items){
     gallery.innerHTML = "";
-    items.forEach(item => {
+    items.forEach(item=>{
         const card = document.createElement("div");
-        card.className = "card";
+        card.className="card";
         card.innerHTML = `
             <img src="${item.src}" alt="${item.name}">
-            <h3>${item.name}</h3>
-            <a href="#" onclick="openImage('${item.src}')">Download</a>
+            <div class="download-btn" onclick="forceDownload('${item.src}','${item.name}.jpg')">Download</div>
         `;
         gallery.appendChild(card);
     });
 }
 
-// Open image in new tab (works for app + web)
-function openImage(url){
-    window.open(url, "_blank"); // Mobile app WebView or browser
+// Force download via Cloudinary fl_attachment
+function forceDownload(url, filename){
+    const downloadUrl = url + "?fl_attachment";
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 // Initial display
